@@ -31,6 +31,8 @@ public final class MetricDefinition implements Serializable, Comparable<MetricDe
     private final String description;
     private final String reportedBy;
     private final int priority;
+    private final String originalLabel;
+    private final Class<? extends Metric> kindOfValue;
     @SuppressWarnings("PMD.LooseCoupling")
     private final EnumSet<Scope> scopes;
 
@@ -49,15 +51,23 @@ public final class MetricDefinition implements Serializable, Comparable<MetricDe
      *         the priority of a metric
      * @param scopes
      *         the scopes of a metric (class, method, or both)
+     * @param originalLabel
+     *         the label-id of the origin
+     * @param kindOfValue
+     *         defines if its percentage or int
      */
+    @SuppressWarnings("checkstyle:ParameterNumber") //TODO
     private MetricDefinition(final String id, final String displayName, final String description,
-            final String reportedBy, final int priority, final Set<Scope> scopes) {
+            final String reportedBy, final int priority, final Set<Scope> scopes, final String originalLabel,
+            final Class<? extends Metric> kindOfValue) {
         this.id = id;
         this.displayName = displayName;
         this.description = description;
         this.reportedBy = reportedBy;
         this.priority = priority;
         this.scopes = EnumSet.copyOf(scopes);
+        this.originalLabel = originalLabel;
+        this.kindOfValue = kindOfValue;
     }
 
     public String getDisplayName() {
@@ -82,6 +92,14 @@ public final class MetricDefinition implements Serializable, Comparable<MetricDe
 
     public Set<Scope> getScopes() {
         return scopes;
+    }
+
+    public String getOriginalLabel() {
+        return originalLabel;
+    }
+
+    public Class<? extends Metric> getKindOfValue() {
+        return kindOfValue;
     }
 
     /**
@@ -136,6 +154,8 @@ public final class MetricDefinition implements Serializable, Comparable<MetricDe
         private String description = StringUtils.EMPTY;
         private String reportedBy = StringUtils.EMPTY;
         private int priority = 0;
+        private String originalLabel;
+        private Class<? extends Metric> kindOfValue;
 
         /**
          * Creates a new {@link MetricDefinitionBuilder} with the given id.
@@ -223,12 +243,43 @@ public final class MetricDefinition implements Serializable, Comparable<MetricDe
         }
 
         /**
+         * Sets the origin Label of the metric definition.
+         *
+         * @param originalLabel
+         *         the scopes of the metric
+         *
+         * @return the builder instance
+         */
+        @CanIgnoreReturnValue
+        public MetricDefinitionBuilder withOriginalLabel(final String originalLabel) {
+            this.originalLabel = originalLabel;
+
+            return this;
+        }
+
+        /**
+         * Sets type of the value (double or integer).
+         *
+         * @param kindOfValue
+         *         the scopes of the metric
+         *
+         * @return the builder instance
+         */
+        @CanIgnoreReturnValue
+        public MetricDefinitionBuilder withKindOfValue(final Class<? extends Metric> kindOfValue) {
+            this.kindOfValue = kindOfValue;
+
+            return this;
+        }
+
+        /**
          * Creates the {@link MetricDefinition} instance.
          *
          * @return the created {@link MetricDefinition} instance
          */
         public MetricDefinition build() {
-            return new MetricDefinition(id, displayName, description, reportedBy, priority, scopes);
+            return new MetricDefinition(id, displayName, description, reportedBy, priority, scopes, originalLabel,
+                    kindOfValue);
         }
     }
 }
