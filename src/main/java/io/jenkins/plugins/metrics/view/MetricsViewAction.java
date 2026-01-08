@@ -74,7 +74,7 @@ public class MetricsViewAction implements RunAction2, StaplerProxy {
      */
     @Override
     public Object getTarget() {
-        return new MetricsView(owner);
+        return new MetricsViewInci(owner);
     }
 
     /**

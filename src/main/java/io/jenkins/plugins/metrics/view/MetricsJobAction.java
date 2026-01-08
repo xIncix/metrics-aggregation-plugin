@@ -13,6 +13,7 @@ import hudson.Extension;
 import hudson.model.Action;
 import hudson.model.Job;
 import hudson.model.Run;
+import jenkins.model.RunAction2;
 import jenkins.model.TransientActionFactory;
 
 /**
@@ -21,10 +22,11 @@ import jenkins.model.TransientActionFactory;
  * @author Andreas Pabst
  */
 @SuppressWarnings("unused")
-public class MetricsJobAction implements Action {
+public class MetricsJobAction implements RunAction2 {
     static final String METRICS_ICON = "symbol-solid/scale-unbalanced plugin-font-awesome-api";
 
     private final Job<?, ?> owner;
+    private transient Run<?, ?> run;
 
     /**
      * Creates a new instance of {@link MetricsJobAction}.
@@ -54,6 +56,16 @@ public class MetricsJobAction implements Action {
     @Override
     public String getUrlName() {
         return MetricsViewAction.ID;
+    }
+
+    @Override
+    public void onAttached(final Run<?, ?> r) {
+        this.run = r;
+    }
+
+    @Override
+    public void onLoad(final Run<?, ?> r) {
+        this.run = r;
     }
 
     /**
