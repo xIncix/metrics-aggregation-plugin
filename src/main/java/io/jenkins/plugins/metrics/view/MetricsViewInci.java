@@ -118,6 +118,37 @@ public class MetricsViewInci extends DefaultAsyncTableContentProvider implements
     }
 
     /**
+     * Get the name and value of a metric.
+     *
+     * @param metricId
+     *          the metric wanted
+     *
+     * @return name and value of the metric
+     */
+    @JavaScriptMethod
+    @SuppressWarnings("unused") //used by jelly view
+    public Map<String, Object> getNameAndValueForNumberValues(final String metricId) {
+        int value = metricsMeasurements.stream()
+                .map(m -> m.getMetric(metricId).orElse(0.0))
+                .mapToInt(Number::intValue)
+                .filter(Double::isFinite)
+                .sum();
+
+        String metricDisplayName = supportedMetrics.stream()
+                .filter(m -> m.getId().equals(metricId))
+                .map(MetricDefinition::getDisplayName)
+                .findFirst()
+                .orElse(metricId); // fallback, falls nicht gefunden
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("name", metricDisplayName);
+        result.put("value", value);
+
+        return result;
+    }
+
+
+    /**
      * Get a tree consisting of {@link MetricsTreeNode}s for a specific metric.
      *
      * @param metricId

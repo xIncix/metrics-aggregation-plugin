@@ -1,10 +1,15 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core"
          xmlns:l="/lib/layout"
-         xmlns:t="/lib/hudson">
+         xmlns:st="jelly:stapler">
 
   <l:layout title="Metrics">
     <l:main-panel>
+
+      <st:adjunct includes="io.jenkins.plugins.echarts"/>
+
+      <script src="${resURL}/plugin/metrics-aggregation/js/half-doghnut.js"/>
+      <st:bind var="view" value="${it}" />
 
       <l:app-bar title="Metrics" subtitle="Build #${it.owner.number}">
         <a class="jenkins-button jenkins-button--primary"
@@ -17,7 +22,12 @@
       <h2>MetricsView</h2>
       <p>Inhalt.</p>
 
+      <l:card title="Lines of Code">
+        <div id="halfDoughnut" style="width: 400px; height: 300px;" data-metric-id="LOC"/>
+      </l:card>
+
     </l:main-panel>
+
   </l:layout>
 
 </j:jelly>
