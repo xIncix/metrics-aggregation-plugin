@@ -1,36 +1,50 @@
 /* global jQuery, view, echarts */
 (function ($) {
     $(document).ready(function () {
-        const el = $('#halfDoughnut');
-        if (!el.length || typeof view === "undefined") return;
 
-        const metricId = el.data('metricId');
+        $('.half-doughnut').each(function () {
+            const $el = $(this);
+            const metricId = $el.data('metricId');
+            const domElement = this;
 
-        if (view.getNameAndValueForNumberValues) {
-            view.getNameAndValueForNumberValues(metricId, function (res) {
-                const data = res.responseJSON;
+            if (!metricId || typeof view === "undefined") return;
 
-                if (!data || typeof data.value === "undefined") {
-                    console.warn("⚠️ Keine gültigen Daten erhalten:", res);
-                    return;
+            view.isPercentageMetric(metricId, function (res) {
+                const isPercentage = res.responseJSON === true;
+
+                if (isPercentage) {
+                    view.getNameAndValueForPercentageValues(metricId, function (res2) {
+                        const data = res2.responseJSON;
+                        if (!data || typeof data.value === "undefined") return;
+
+                        renderHalfDoughnutChart(domElement, data.value, data.name, true);
+                    });
                 }
+                else {
+                    view.getNameAndValueForIntValues(metricId, function (res2) {
+                        const data = res2.responseJSON;
+                        if (!data || typeof data.value === "undefined") return;
 
-                renderHalfDoghnutChart(data.value, data.name);
+                        renderHalfDoughnutChart(domElement, data.value, data.name, false);
+                    });
+                }
             });
-        }
+        });
 
-        function renderHalfDoghnutChart(value, metricName) {
-            const chartDom = document.getElementById('halfDoughnut');
+        function renderHalfDoughnutChart(domElement, value, metricName, isPercentage) {
+            const chartDom = domElement instanceof jQuery ? domElement[0] : domElement;
             if (!chartDom) return;
 
             const myChart = echarts.init(chartDom);
+
+            const labelText = `${metricName}\n${isPercentage ? value.toFixed(2) + '%' : value}`;
 
             const option = {
                 tooltip: { trigger: 'item' },
                 series: [{
                     name: metricName,
                     type: 'pie',
-                    radius: ['40%', '70%'],
+                    radius: ['50%', '70%'],
                     center: ['50%', '70%'],
                     startAngle: 180,
                     endAngle: 360,
@@ -38,13 +52,14 @@
                     label: {
                         show: true,
                         position: 'center',
-                        formatter: `${metricName}\n${value}`,
-                        fontSize: 18,
+                        formatter: labelText,
+                        fontSize: 15,
                         fontWeight: 'bold'
                     },
+                    color: ['green', 'red'],
                     data: [
                         { value: value, name: metricName },
-                        { value: 0, name: '' } // Leerwert für Halbkreis
+                        { value: isPercentage ? (100 - value) : 0, name: '' }
                     ]
                 }]
             };

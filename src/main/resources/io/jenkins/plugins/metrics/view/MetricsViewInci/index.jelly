@@ -22,12 +22,36 @@
       <h2>MetricsView</h2>
       <p>Inhalt.</p>
 
-      <l:card title="Lines of Code">
-        <div id="halfDoughnut" style="width: 400px; height: 300px;" data-metric-id="LOC"/>
-      </l:card>
+      <!-- FLEX CONTAINER -->
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;">
+        <!-- CARD -->
+        <div style="flex: 1 1 300px; max-width: 400px;">
+          <l:card title="Lines of Code">
+            <div style="display: flex; justify-content: center; align-items: center; padding: 1rem 0;">
+              <div class="half-doughnut" style="width: 90%; max-width: 320px; height: 280px;" data-metric-id="LOC"/>
+            </div>
+          </l:card>
+        </div>
+
+        <!-- Wiederhole für andere Karten -->
+        <div style="flex: 1 1 300px; max-width: 400px;">
+          <l:card title="Line Coverage (%)">
+            <div style="display: flex; justify-content: center; align-items: center; padding: 1rem 0;">
+              <div class="half-doughnut" style="width: 90%; max-width: 320px; height: 280px;" data-metric-id="LINE_COVERAGE"/>
+            </div>
+          </l:card>
+        </div>
+
+        <div style="flex: 1 1 300px; max-width: 400px;">
+          <l:card title="Warnings">
+            <div style="display: flex; justify-content: center; align-items: center; padding: 1rem 0;">
+              <div class="half-doughnut" style="width: 90%; max-width: 320px; height: 280px;" data-metric-id="WARNING_NORMAL"/>
+            </div>
+          </l:card>
+        </div>
+      </div>
+
 
     </l:main-panel>
-
   </l:layout>
-
 </j:jelly>

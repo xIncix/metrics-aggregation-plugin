@@ -118,7 +118,26 @@ public class MetricsViewInci extends DefaultAsyncTableContentProvider implements
     }
 
     /**
-     * Get the name and value of a metric.
+     * If a metric is a percentage metric.
+     *
+     * @param metricId
+     *          the metric wanted
+     *
+     * @return true if it is a percentage metric
+     */
+    @JavaScriptMethod
+    @SuppressWarnings("unused")
+    public boolean isPercentageMetric(final String metricId) {
+        return supportedMetrics.stream()
+                .filter(m -> m.getId().equals(metricId))
+                .map(MetricDefinition::getKindOfValue)
+                .filter(Objects::nonNull)
+                .map(Class::getSimpleName)
+                .anyMatch("PercentageMetric"::equals);
+    }
+
+    /**
+     * Get the name and value of a metric with int value.
      *
      * @param metricId
      *          the metric wanted
@@ -127,7 +146,7 @@ public class MetricsViewInci extends DefaultAsyncTableContentProvider implements
      */
     @JavaScriptMethod
     @SuppressWarnings("unused") //used by jelly view
-    public Map<String, Object> getNameAndValueForNumberValues(final String metricId) {
+    public Map<String, Object> getNameAndValueForIntValues(final String metricId) {
         int value = metricsMeasurements.stream()
                 .map(m -> m.getMetric(metricId).orElse(0.0))
                 .mapToInt(Number::intValue)
@@ -138,7 +157,7 @@ public class MetricsViewInci extends DefaultAsyncTableContentProvider implements
                 .filter(m -> m.getId().equals(metricId))
                 .map(MetricDefinition::getDisplayName)
                 .findFirst()
-                .orElse(metricId); // fallback, falls nicht gefunden
+                .orElse(metricId);
 
         Map<String, Object> result = new HashMap<>();
         result.put("name", metricDisplayName);
@@ -146,6 +165,41 @@ public class MetricsViewInci extends DefaultAsyncTableContentProvider implements
 
         return result;
     }
+
+
+    /**
+     * Get the name and value of a metric with percentage value.
+     *
+     * @param metricId
+     *          the metric wanted
+     *
+     * @return name and value of the metric
+     */
+    @JavaScriptMethod
+    @SuppressWarnings("unused") // used by jelly view
+    public Map<String, Object> getNameAndValueForPercentageValues(final String metricId) {
+        // Hole den ERSTEN gültigen Wert – kein Durchschnitt, keine Rundung
+        double value = metricsMeasurements.stream()
+                .map(m -> m.getMetric(metricId).orElse(null))
+                .filter(Objects::nonNull)
+                .map(Number::doubleValue)
+                .filter(Double::isFinite)
+                .findFirst() // <--- Nur den ersten nehmen
+                .orElse(0.0);
+
+        String metricDisplayName = supportedMetrics.stream()
+                .filter(m -> m.getId().equals(metricId))
+                .map(MetricDefinition::getDisplayName)
+                .findFirst()
+                .orElse(metricId); // fallback
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("name", metricDisplayName);
+        result.put("value", value);
+
+        return result;
+    }
+
 
 
     /**
