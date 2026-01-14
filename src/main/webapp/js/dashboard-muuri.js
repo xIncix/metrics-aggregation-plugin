@@ -26,7 +26,6 @@
 
         configureBtn.addEventListener('click', function () {
             editMode = true;
-
             document.body.classList.add('dashboard-edit-mode');
 
             configureBtn.style.display = 'none';
@@ -37,7 +36,6 @@
 
         saveBtn.addEventListener('click', function () {
             editMode = false;
-
             document.body.classList.remove('dashboard-edit-mode');
 
             saveBtn.style.display = 'none';
@@ -45,7 +43,6 @@
 
             grid.refreshItems().layout();
         });
-
 
         const gridElement = document.querySelector('.dashboard-grid');
 

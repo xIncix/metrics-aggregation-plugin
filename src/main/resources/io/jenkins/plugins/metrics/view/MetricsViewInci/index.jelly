@@ -15,7 +15,7 @@
 
       <script src="https://unpkg.com/muuri@0.9.5/dist/muuri.min.js"/>
 
-      <st:bind var="view" value="${it}" />
+      <st:bind var="view" value="${it}"/>
 
       <l:app-bar title="Metrics" subtitle="Build #${it.owner.number}">
         <a class="jenkins-button jenkins-button--primary"
@@ -29,18 +29,21 @@
 
       <button
               id="configure-dashboard-btn"
-              class="jenkins-button jenkins-button--primary">
+              class="jenkins-button">
         <l:icon src="symbol-edit"/>
         Configure Dashboard
       </button>
 
-      <button
-              id="save-dashboard-btn"
-              class="jenkins-button jenkins-button--primary"
-              style="display:none">
-        <l:icon src="symbol-check"/>
-        Save
-      </button>
+      <div id="dashboard-actions">
+        <button id="save-dashboard-btn" class="jenkins-button">
+          <l:icon src="symbol-check"/> Save
+        </button>
+
+        <button id="add-widget-btn"
+                class="jenkins-button jenkins-!-margin-left-4">
+          <l:icon src="symbol-add"/> Add Widget
+        </button>
+      </div>
 
 
       <div class="dashboard-grid">

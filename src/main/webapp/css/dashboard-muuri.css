@@ -18,6 +18,10 @@
     position: relative;
     width: 100%;
     height: 100%;
+
+    border: 1px solid #6D6B6D;
+    border-radius: 12px;
+    background-color: #fff;
 }
 
 .half-doughnut {
@@ -26,12 +30,12 @@
     margin: 0 auto;
 }
 
-.dashboard-edit-mode .item-content {
-    outline: 2px dashed #007cba;
+body.dashboard-edit-mode .item-content {
+    border: 2px dashed #6D6B6D;
     cursor: move;
 }
 
-.dashboard-edit-mode .item-content:hover {
+body.dashboard-edit-mode .item-content:hover {
     background: rgba(0, 0, 0, 0.05);
 }
 
@@ -39,11 +43,12 @@
     position: absolute;
     top: 6px;
     right: 6px;
+
     display: none;
     z-index: 10;
 }
 
-.dashboard-edit-mode .delete-widget-btn {
+body.dashboard-edit-mode .delete-widget-btn {
     display: inline-flex;
 }
 
@@ -51,7 +56,25 @@
     background-color: rgba(220, 38, 38, 0.1);
 }
 
-#save-dashboard-btn {
-    background-color: #007cba;
+#dashboard-actions {
+    display: none;
 }
 
+body.dashboard-edit-mode #dashboard-actions {
+    display: flex;
+    align-items: center;
+}
+
+button.jenkins-button#configure-dashboard-btn {
+    background-color: #48728B;
+}
+
+button.jenkins-button#save-dashboard-btn {
+    background-color: #D33834;
+}
+
+button.jenkins-button#add-widget-btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    background-color: #80B0C4;
+}
