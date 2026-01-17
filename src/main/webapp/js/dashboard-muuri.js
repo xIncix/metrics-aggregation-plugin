@@ -84,11 +84,13 @@
                 { label: 'Line Chart', value: 'line' }
             ]);
 
-            initDropdown(metricDropdown, [
-                { label: 'Lines of Code', value: 'LOC' },
-                { label: 'Warnings', value: 'WARNING_NORMAL' },
-                { label: 'Branch Coverage', value: 'BRANCH_COVERAGE'}
-            ]);
+            let metricLabelAndId = document.getElementById('metric-label-id');
+            metricLabelAndId = JSON.parse(metricLabelAndId.dataset.metricLabelId);
+
+            initDropdown(metricDropdown, metricLabelAndId.map(m => ({
+                label: m.label,
+                value: m.id
+            })));
 
             dialog.form(form, {
                 title: title,

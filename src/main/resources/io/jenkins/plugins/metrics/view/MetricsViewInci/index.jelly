@@ -34,6 +34,10 @@
         Configure Dashboard
       </button>
 
+      <div id="metric-label-id"
+           data-metric-label-id="${it.metricDropdownOptionsJSON}">
+      </div>
+
       <div id="dashboard-actions">
         <button id="save-dashboard-btn" class="jenkins-button">
           <l:icon src="symbol-check"/> Save

@@ -200,7 +200,23 @@ public class MetricsViewInci extends DefaultAsyncTableContentProvider implements
         return result;
     }
 
-
+    /**
+     * Get the name and id of all available metrics.
+     *
+     *
+     * @return name and id of all metrics
+     */
+    @SuppressWarnings("unused")
+    public String getMetricDropdownOptionsJSON() {
+        return toJson(
+                supportedMetrics.stream()
+                        .map(m -> Map.of(
+                                "id", m.getId(),
+                                "label", m.getDisplayName()
+                        ))
+                        .toList()
+        );
+    }
 
     /**
      * Get a tree consisting of {@link MetricsTreeNode}s for a specific metric.
