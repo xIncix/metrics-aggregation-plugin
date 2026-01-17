@@ -1,11 +1,11 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core"
          xmlns:l="/lib/layout"
-         xmlns:st="jelly:stapler">
+         xmlns:st="jelly:stapler"
+         xmlns:f="/lib/form">
 
   <l:layout title="Metrics">
     <l:main-panel>
-
       <st:adjunct includes="io.jenkins.plugins.echarts"/>
 
       <script src="${resURL}/plugin/metrics-aggregation/js/half-doghnut.js"/>
@@ -43,6 +43,41 @@
                 class="jenkins-button jenkins-!-margin-left-4">
           <l:icon src="symbol-add"/> Add Widget
         </button>
+      </div>
+
+      <div id="add-widget-form"
+           class="jenkins-hidden"
+           data-title="${%Add widget}">
+
+        <f:form>
+
+          <f:entry title="${%Chart type}">
+            <div class="jenkins-dropdown" data-name="chartType">
+              <button type="button"
+                      class="jenkins-button jenkins-dropdown__button">
+                <span class="jenkins-dropdown__label">
+                  Select chart type
+                </span>
+                <l:icon src="symbol-chevron-down"/>
+              </button>
+              <ul class="jenkins-dropdown__menu"/>
+            </div>
+          </f:entry>
+
+          <f:entry title="${%Metric}">
+            <div class="jenkins-dropdown" data-name="metric">
+              <button type="button"
+                      class="jenkins-button jenkins-dropdown__button">
+                <span class="jenkins-dropdown__label">
+                  Select metric
+                </span>
+                <l:icon src="symbol-chevron-down"/>
+              </button>
+              <ul class="jenkins-dropdown__menu"/>
+            </div>
+          </f:entry>
+
+        </f:form>
       </div>
 
 
