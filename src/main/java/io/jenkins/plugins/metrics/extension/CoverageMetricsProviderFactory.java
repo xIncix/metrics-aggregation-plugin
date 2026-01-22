@@ -1,6 +1,7 @@
 package io.jenkins.plugins.metrics.extension;
 
 import edu.hm.hafner.coverage.Metric;
+import edu.hm.hafner.coverage.Value;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -201,7 +202,7 @@ public class CoverageMetricsProviderFactory extends MetricsProviderFactory {
             .build();
 
     @Override
-    protected MetricsProvider getMetricsProviderFor(final Run<?, ?> build) {
+    protected MetricsProvider getMetricsProviderFor(final Run<?, ?> build) { //TODO complexity
         Map<String, ClassMetricsMeasurementBuilder> builders = new HashMap<>();
         Map<String, Set<String>> seenMetricIds = new HashMap<>();
         var provider = new MetricsProvider();
@@ -229,17 +230,7 @@ public class CoverageMetricsProviderFactory extends MetricsProviderFactory {
 
                     if (cov.isPresent() && !seen.contains(metricDefinition.getId())) {
                         seen.add(metricDefinition.getId());
-                        var kindOfValueClass = metricDefinition.getKindOfValue();
-                        if (kindOfValueClass == DoubleMetric.class) {
-                            var covered = cov.get().asDouble();
-                            builder.withMetric(new DoubleMetric(metricDefinition, cov.get().asDouble()));
-                        }
-                        else if (kindOfValueClass == PercentageMetric.class) {
-                            builder.withMetric(new PercentageMetric(metricDefinition, cov.get().asDouble()));
-                        }
-                        else if (kindOfValueClass == IntegerMetric.class) {
-                            builder.withMetric(new IntegerMetric(metricDefinition, cov.get().asInteger()));
-                        }
+                        buildWithRightMetric(builder, metricDefinition, cov.get());
                     }
                 }
             }
@@ -261,5 +252,19 @@ public class CoverageMetricsProviderFactory extends MetricsProviderFactory {
                 MUTATION_COVERAGE, TEST_STRENGTH, TESTS_NUMBER, LOC, NCSS, CYCLOMATIC_COMPLEXITY, COGNITIVE_COMPLEXITY,
                 NPATH_COMPLEXITY, ACCESS_TO_FOREIGN_DATA, COHESION, FAN_OUT, NUMBER_OF_ACCESSORS, WEIGHT_OF_CLASS,
                 WEIGHED_METHOD_COUNT);
+    }
+
+    private void buildWithRightMetric(final ClassMetricsMeasurementBuilder builder,
+            final MetricDefinition metricDefinition, final Value cov) {
+        var kindOfValueClass = metricDefinition.getKindOfValue();
+        if (kindOfValueClass == DoubleMetric.class) {
+            builder.withMetric(new DoubleMetric(metricDefinition, cov.asDouble()));
+        }
+        else if (kindOfValueClass == PercentageMetric.class) {
+            builder.withMetric(new PercentageMetric(metricDefinition, cov.asDouble()));
+        }
+        else if (kindOfValueClass == IntegerMetric.class) {
+            builder.withMetric(new IntegerMetric(metricDefinition, cov.asInteger()));
+        }
     }
 }

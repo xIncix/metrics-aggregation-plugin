@@ -7,13 +7,12 @@
   <l:layout title="Metrics">
     <l:main-panel>
       <st:adjunct includes="io.jenkins.plugins.echarts"/>
+      <st:adjunct includes="io.jenkins.plugins.muuri"/>
 
       <script src="${resURL}/plugin/metrics-aggregation/js/half-doghnut.js"/>
       <script src="${resURL}/plugin/metrics-aggregation/js/dashboard-muuri.js"/>
       <link rel="stylesheet"
             href="${resURL}/plugin/metrics-aggregation/css/dashboard-muuri.css"/>
-
-      <script src="https://unpkg.com/muuri@0.9.5/dist/muuri.min.js"/>
 
       <st:bind var="view" value="${it}"/>
 

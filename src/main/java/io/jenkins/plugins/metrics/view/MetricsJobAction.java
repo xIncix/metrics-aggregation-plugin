@@ -1,6 +1,7 @@
 package io.jenkins.plugins.metrics.view;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -26,6 +27,11 @@ public class MetricsJobAction implements RunAction2 {
     static final String METRICS_ICON = "symbol-solid/scale-unbalanced plugin-font-awesome-api";
 
     private final Job<?, ?> owner;
+
+    @SuppressFBWarnings(
+            value = "URF_UNREAD_FIELD",
+            justification = "Run is stored for potential future use / Jenkins conventions"
+    )
     private transient Run<?, ?> run;
 
     /**

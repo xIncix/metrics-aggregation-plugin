@@ -1,6 +1,6 @@
 package io.jenkins.plugins.metrics.extension;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import edu.hm.hafner.coverage.ClassNode;
 import edu.hm.hafner.coverage.Coverage.CoverageBuilder;
@@ -19,12 +19,12 @@ import static org.mockito.Mockito.*;
 /**
  * Java doc comment.
  */
-public class CoverageMetricsProviderFactoryTest {
+class CoverageMetricsProviderFactoryTest {
     /**
      * Java doc comment.
      */
     @Test
-    public void shouldGetMetricProviders() {
+    void shouldGetMetricProviders() {
         var coverageMetricsProviderFactory = new CoverageMetricsProviderFactory();
         var coverageResult = mock(Node.class);
         var classNode = new ClassNode("com.example.MyClass");

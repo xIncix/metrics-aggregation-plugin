@@ -9,7 +9,9 @@
             const metricId = $el.data('metricId');
             const domElement = this;
 
-            if (!metricId || typeof view === "undefined") return;
+            if (!metricId || typeof view === "undefined") {
+                return;
+            }
 
             view.isPercentageMetric(metricId, function (res) {
                 const isPercentage = res.responseJSON === true;
@@ -17,7 +19,9 @@
                 if (isPercentage) {
                     view.getNameAndValueForPercentageValues(metricId, function (res2) {
                         const data = res2.responseJSON;
-                        if (!data || typeof data.value === "undefined") return;
+                        if (!data || typeof data.value === "undefined") {
+                            return;
+                        }
 
                         renderHalfDoughnutChart(domElement, data.value, data.name, true);
                     });
@@ -25,7 +29,9 @@
                 else {
                     view.getNameAndValueForIntValues(metricId, function (res2) {
                         const data = res2.responseJSON;
-                        if (!data || typeof data.value === "undefined") return;
+                        if (!data || typeof data.value === "undefined") {
+                            return;
+                        }
 
                         renderHalfDoughnutChart(domElement, data.value, data.name, false);
                     });
@@ -35,7 +41,9 @@
     }
 
     function renderHalfDoughnutChart(domElement, value, metricName, isPercentage) {
-        if (!domElement) return;
+        if (!domElement) {
+            return;
+        }
 
         const chartDom = domElement instanceof jQuery ? domElement[0] : domElement;
         const myChart = echarts.init(chartDom);
@@ -43,7 +51,7 @@
         const labelText = `${metricName}\n${isPercentage ? value.toFixed(2) + '%' : value}`;
 
         const option = {
-            tooltip: { trigger: 'item' },
+            tooltip: {trigger: 'item'},
             series: [{
                 name: metricName,
                 type: 'pie',
@@ -60,8 +68,8 @@
                 },
                 color: ['#3B873E', '#E0E0E0'],
                 data: [
-                    { value: value, name: metricName },
-                    { value: isPercentage ? (100 - value) : 0, name: '' }
+                    {value: value, name: metricName},
+                    {value: isPercentage ? (100 - value) : 0, name: ''}
                 ]
             }]
         };

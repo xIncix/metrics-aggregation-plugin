@@ -6,7 +6,9 @@
             dragEnabled: true,
 
             dragStartPredicate: function (item, event) {
-                if (!editMode) return false;
+                if (!editMode) {
+                    return false;
+                }
                 return !event.target.closest('.delete-widget-btn');
             },
 
@@ -51,16 +53,20 @@
 
         gridElement.addEventListener('click', function (e) {
             const deleteBtn = e.target.closest('.delete-widget-btn');
-            if (!deleteBtn) return;
+            if (!deleteBtn) {
+                return;
+            }
 
             e.preventDefault();
             e.stopPropagation();
 
             const itemElem = deleteBtn.closest('.item');
             const item = grid.getItem(itemElem);
-            if (!item) return;
+            if (!item) {
+                return;
+            }
 
-            grid.remove([item], { removeElements: true });
+            grid.remove([item], {removeElements: true});
         });
 
         addWidgetBtn.addEventListener('click', showAddWidgetForm);
@@ -79,9 +85,9 @@
             const metricDropdown = form.querySelector('[data-name="metric"]');
 
             initDropdown(chartDropdown, [
-                { label: 'Half Doughnut', value: 'half-doughnut' },
-                { label: 'Bar Chart', value: 'bar' },
-                { label: 'Line Chart', value: 'line' }
+                {label: 'Half Doughnut', value: 'half-doughnut'},
+                {label: 'Bar Chart', value: 'bar'},
+                {label: 'Line Chart', value: 'line'}
             ]);
 
             let metricLabelAndId = document.getElementById('metric-label-id');
@@ -106,13 +112,15 @@
                     return;
                 }
 
-                console.log('Add widget:', { chartType, metric });
+                console.log('Add widget:', {chartType, metric});
                 createWidget(chartType, metric);
             });
         }
 
         function initDropdown(dropdown, options) {
-            if (!dropdown) return;
+            if (!dropdown) {
+                return;
+            }
 
             const button = dropdown.querySelector('.jenkins-dropdown__button');
             const label = dropdown.querySelector('.jenkins-dropdown__label');
@@ -153,7 +161,8 @@
 
             const deleteBtn = document.createElement('button');
             deleteBtn.className = 'delete-widget-btn jenkins-button jenkins-button--icon';
-            deleteBtn.innerHTML = '<span class="jenkins-icon symbol-trash"></span>';
+
+            deleteBtn.textContent = 'X'; //TODO Fix this
 
             content.appendChild(deleteBtn);
 
@@ -195,7 +204,6 @@
 
             container.appendChild(el);
 
-            // 🔥 DAS ist der entscheidende Call
             if (window.initHalfDoughnuts) {
                 window.initHalfDoughnuts(container);
             }
