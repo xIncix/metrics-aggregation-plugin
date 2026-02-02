@@ -13,29 +13,12 @@
                 return;
             }
 
-            view.isPercentageMetric(metricId, function (res) {
-                const isPercentage = res.responseJSON === true;
-
-                if (isPercentage) {
-                    view.getNameAndValueForPercentageValues(metricId, function (res2) {
-                        const data = res2.responseJSON;
-                        if (!data || typeof data.value === "undefined") {
-                            return;
-                        }
-
-                        renderHalfDoughnutChart(domElement, data.value, data.name, true);
-                    });
+            view.getNameAndValue(metricId, function (res) {
+                const data = res.responseJSON;
+                if (!data || typeof data.value === "undefined") {
+                    return;
                 }
-                else {
-                    view.getNameAndValueForIntValues(metricId, function (res2) {
-                        const data = res2.responseJSON;
-                        if (!data || typeof data.value === "undefined") {
-                            return;
-                        }
-
-                        renderHalfDoughnutChart(domElement, data.value, data.name, false);
-                    });
-                }
+                renderHalfDoughnutChart(domElement, data.value, data.name, data.isPercentage)
             });
         });
     }

@@ -3,6 +3,7 @@ package io.jenkins.plugins.metrics.view;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -121,12 +122,11 @@ public class MetricsViewInci extends DefaultAsyncTableContentProvider implements
      * If a metric is a percentage metric.
      *
      * @param metricId
-     *          the metric wanted
+     *         the metric wanted
      *
      * @return true if it is a percentage metric
      */
     @JavaScriptMethod
-    @SuppressWarnings("unused")
     public boolean isPercentageMetric(final String metricId) {
         return supportedMetrics.stream()
                 .filter(m -> m.getId().equals(metricId))
@@ -140,12 +140,11 @@ public class MetricsViewInci extends DefaultAsyncTableContentProvider implements
      * Get the name and value of a metric with int value.
      *
      * @param metricId
-     *          the metric wanted
+     *         the metric wanted
      *
      * @return name and value of the metric
      */
     @JavaScriptMethod
-    @SuppressWarnings("unused") //used by jelly view
     public Map<String, Object> getNameAndValueForIntValues(final String metricId) {
         int value = metricsMeasurements.stream()
                 .map(m -> m.getMetric(metricId).orElse(0.0))
@@ -162,47 +161,139 @@ public class MetricsViewInci extends DefaultAsyncTableContentProvider implements
         Map<String, Object> result = new HashMap<>();
         result.put("name", metricDisplayName);
         result.put("value", value);
+        result.put("isPercentage", false);
 
         return result;
     }
-
 
     /**
      * Get the name and value of a metric with percentage value.
      *
      * @param metricId
-     *          the metric wanted
+     *         the metric wanted
      *
      * @return name and value of the metric
      */
     @JavaScriptMethod
-    @SuppressWarnings("unused") // used by jelly view
     public Map<String, Object> getNameAndValueForPercentageValues(final String metricId) {
-        // Hole den ERSTEN gültigen Wert – kein Durchschnitt, keine Rundung
         double value = metricsMeasurements.stream()
                 .map(m -> m.getMetric(metricId).orElse(null))
                 .filter(Objects::nonNull)
                 .map(Number::doubleValue)
                 .filter(Double::isFinite)
-                .findFirst() // <--- Nur den ersten nehmen
+                .mapToDouble(Double::doubleValue)
+                .average()
                 .orElse(0.0);
 
         String metricDisplayName = supportedMetrics.stream()
                 .filter(m -> m.getId().equals(metricId))
                 .map(MetricDefinition::getDisplayName)
                 .findFirst()
-                .orElse(metricId); // fallback
+                .orElse(metricId);
 
         Map<String, Object> result = new HashMap<>();
         result.put("name", metricDisplayName);
         result.put("value", value);
+        result.put("isPercentage", true);
 
         return result;
     }
 
     /**
-     * Get the name and id of all available metrics.
+     * Get the name and value of a metric.
      *
+     * @param metricId
+     *         the metric wanted
+     *
+     * @return name and value of the metric
+     */
+    @JavaScriptMethod
+    @SuppressWarnings("unused") // used by jelly view
+    public Map<String, Object> getNameAndValue(final String metricId) {
+        Map<String, Object> result = new HashMap<>();
+        if (isPercentageMetric(metricId)) {
+            return getNameAndValueForPercentageValues(metricId);
+        }
+        return getNameAndValueForIntValues(metricId);
+    }
+
+    /**
+     * Get the name and value of a metric for the last builds.
+     *
+     * @param metricId
+     *         the metric wanted
+     *
+     * @param numberOfBuilds
+     *         the ampunt of builds wanted, starting with the latest build
+     *
+     * @return name and value of the metric
+     */
+    @JavaScriptMethod
+    @SuppressWarnings("unused") // used by jelly view
+    public Map<String, Object> getNameAndValuesForLastBuilds(final String metricId, final int numberOfBuilds) {
+        String metricDisplayName = supportedMetrics.stream()
+                .filter(m -> m.getId().equals(metricId))
+                .map(MetricDefinition::getDisplayName)
+                .findFirst()
+                .orElse(metricId);
+
+        boolean isPercentage = isPercentageMetric(metricId);
+
+        List<Map<String, Object>> values = new ArrayList<>();
+
+        Run<?, ?> current = owner;
+        for (int i = 0; i < numberOfBuilds && current != null; i++) {
+            double value = getValueForRun(metricId, current, isPercentage);
+
+            Map<String, Object> point = new HashMap<>();
+            point.put("build", current.getNumber());
+            point.put("value", value);
+            values.add(point);
+
+            current = current.getPreviousBuild();
+        }
+
+        java.util.Collections.reverse(values);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("name", metricDisplayName);
+        result.put("values", values);
+        result.put("isPercentage", isPercentage);
+        return result;
+    }
+
+    private double getValueForRun(final String metricId, final Run<?, ?> run, final boolean isPercentage) {
+        List<ClassMetricsMeasurement> runMeasurements = MetricsProviderFactory.findAllFor(run).stream()
+                .map(MetricsProvider::getMetricsMeasurements)
+                .flatMap(List::stream)
+                .filter(ClassMetricsMeasurement.class::isInstance)
+                .collect(Collectors.groupingBy(MetricsMeasurement::getQualifiedClassName))
+                .values().stream()
+                .map(measurementsPerFile -> (ClassMetricsMeasurement) measurementsPerFile.stream()
+                        .reduce(MetricsMeasurement::merge).orElse(null))
+                .filter(Objects::nonNull)
+                .toList();
+
+        if (isPercentage) {
+            return runMeasurements.stream()
+                    .map(m -> m.getMetric(metricId).orElse(null))
+                    .filter(Objects::nonNull)
+                    .map(Number::doubleValue)
+                    .filter(Double::isFinite)
+                    .mapToDouble(Double::doubleValue)
+                    .average()
+                    .orElse(0.0);
+        }
+        else {
+            return runMeasurements.stream()
+                    .map(m -> m.getMetric(metricId).orElse(0.0))
+                    .mapToInt(Number::intValue)
+                    .sum();
+        }
+    }
+
+    /**
+     * Get the name and id of all available metrics.
      *
      * @return name and id of all metrics
      */

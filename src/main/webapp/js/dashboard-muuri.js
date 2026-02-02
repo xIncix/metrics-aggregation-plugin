@@ -172,20 +172,21 @@
             content.appendChild(chartContainer);
             itemElem.appendChild(content);
 
-            renderChart(chartType, metric, chartContainer);
+            renderChart(chartType, metric, chartContainer, itemElem);
 
             grid.add(itemElem);
             grid.refreshItems().layout();
         }
 
-        function renderChart(chartType, metric, container) {
+        function renderChart(chartType, metric, container, itemElem) {
             switch (chartType) {
                 case 'half-doughnut':
+                    itemElem.classList.add('small')
                     renderHalfDoughnut(metric, container);
                     break;
 
                 case 'bar':
-                    console.warn('Bar chart not implemented yet');
+                    renderBarChart(metric, container);
                     break;
 
                 case 'line':
@@ -206,6 +207,19 @@
 
             if (window.initHalfDoughnuts) {
                 window.initHalfDoughnuts(container);
+            }
+        }
+
+        function renderBarChart(metric, container) {
+            const el = document.createElement('div');
+            el.className = 'bar-chart';
+            el.dataset.metricId = metric;
+            el.dataset.lastN = 5;
+
+            container.appendChild(el);
+
+            if (window.initBarChart) {
+                window.initBarChart(container);
             }
         }
 

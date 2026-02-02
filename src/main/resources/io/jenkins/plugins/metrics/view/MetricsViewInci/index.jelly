@@ -10,6 +10,7 @@
       <st:adjunct includes="io.jenkins.plugins.muuri"/>
 
       <script src="${resURL}/plugin/metrics-aggregation/js/half-doghnut.js"/>
+      <script src="${resURL}/plugin/metrics-aggregation/js/bar-chart.js"/>
       <script src="${resURL}/plugin/metrics-aggregation/js/dashboard-muuri.js"/>
       <link rel="stylesheet"
             href="${resURL}/plugin/metrics-aggregation/css/dashboard-muuri.css"/>
@@ -86,7 +87,7 @@
 
       <div class="dashboard-grid">
 
-        <div class="item">
+        <div class="item small">
           <div class="item-content">
 
             <button class="delete-widget-btn jenkins-button jenkins-button--icon">
@@ -98,7 +99,7 @@
           </div>
         </div>
 
-        <div class="item">
+        <div class="item small">
           <div class="item-content">
 
             <button class="delete-widget-btn jenkins-button jenkins-button--icon">
@@ -110,7 +111,7 @@
           </div>
         </div>
 
-        <div class="item">
+        <div class="item small">
           <div class="item-content">
 
             <button class="delete-widget-btn jenkins-button jenkins-button--icon">
