@@ -2,6 +2,7 @@ package io.jenkins.plugins.metrics.view;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import net.sf.json.JSONObject;
 
 import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.StaplerResponse2;
@@ -18,6 +20,7 @@ import org.kohsuke.stapler.bind.JavaScriptMethod;
 import org.kohsuke.stapler.export.ExportedBean;
 import hudson.model.ModelObject;
 import hudson.model.Run;
+import hudson.model.User;
 
 import io.jenkins.plugins.datatables.DefaultAsyncTableContentProvider;
 import io.jenkins.plugins.datatables.TableModel;
@@ -40,6 +43,7 @@ public class MetricsViewInci extends DefaultAsyncTableContentProvider implements
     private final List<ClassMetricsMeasurement> metricsMeasurements;
     private final List<MetricDefinition> supportedMetrics;
     private final List<String> projectOverview;
+    private final DashboardLayoutService dashboardLayoutService = new DashboardLayoutService();
 
     /**
      * Create a new {@link MetricsViewInci}.
@@ -222,9 +226,8 @@ public class MetricsViewInci extends DefaultAsyncTableContentProvider implements
      *
      * @param metricId
      *         the metric wanted
-     *
      * @param numberOfBuilds
-     *         the ampunt of builds wanted, starting with the latest build
+     *         the amount of builds wanted
      *
      * @return name and value of the metric
      */
@@ -290,6 +293,55 @@ public class MetricsViewInci extends DefaultAsyncTableContentProvider implements
                     .mapToInt(Number::intValue)
                     .sum();
         }
+    }
+
+    /**
+     * Returns the dashboard layout for a user or a template JSON.
+     *
+     * @return layout as JSON
+     */
+    @JavaScriptMethod
+    @SuppressWarnings("unused") // used by jelly view
+    public JSONObject getDashboardLayout() {
+        User current = User.current();
+        String json = dashboardLayoutService.getEffectiveLayoutJson(current);
+
+        try {
+            return JSONObject.fromObject(json);
+        }
+        catch (NullPointerException e) {
+            return JSONObject.fromObject(dashboardLayoutService.getEffectiveLayoutJson(null));
+        }
+    }
+
+    /**
+     * Saves given dashboard layout for a user.
+     *
+     * @param layout
+     *         the given layout
+     *
+     * @return ok when saved successfully
+     */
+    @JavaScriptMethod
+    @SuppressWarnings("unused") // used by jelly view
+    public JSONObject saveDashboardLayout(final JSONObject layout) {
+        JSONObject result = new JSONObject();
+
+        try {
+            User current = User.current();
+            if (layout == null) {
+                throw new IllegalArgumentException("layout is null");
+            }
+
+            dashboardLayoutService.saveLayoutJson(current, layout.toString());
+
+            result.put("ok", true);
+        }
+        catch (IOException | IllegalArgumentException | IllegalStateException e) {
+            result.put("ok", false);
+        }
+
+        return result;
     }
 
     /**

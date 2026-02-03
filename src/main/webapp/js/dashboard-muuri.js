@@ -27,6 +27,24 @@
             return;
         }
 
+        view.getDashboardLayout(function (res) {
+            const layout = res && res.responseJSON;
+            if (!layout || !Array.isArray(layout.widgets)) {
+                console.warn('Dashboard layout missing/invalid, got:', layout);
+                grid.refreshItems().layout();
+                return;
+            }
+
+            layout.widgets.forEach(w => {
+                if (!w || !w.chartType || !w.metricId) {
+                    return;
+                }
+                createWidget(w.chartType, w.metricId, w.id);
+            });
+
+            grid.refreshItems().layout();
+        });
+
         configureBtn.addEventListener('click', function () {
             editMode = true;
             document.body.classList.add('dashboard-edit-mode');
@@ -46,6 +64,9 @@
             addWidgetBtn.style.display = 'none';
             configureBtn.style.display = 'inline-flex';
 
+            const state = buildDashboardState();
+            view.saveDashboardLayout(state, function () {
+            });
             grid.refreshItems().layout();
         });
 
@@ -152,9 +173,13 @@
             });
         }
 
-        function createWidget(chartType, metric) {
+        function createWidget(chartType, metric, widgetId) {
             const itemElem = document.createElement('div');
             itemElem.className = 'item';
+
+            itemElem.dataset.widgetId = widgetId || crypto.randomUUID();
+            itemElem.dataset.chartType = chartType;
+            itemElem.dataset.metricId = metric;
 
             const content = document.createElement('div');
             content.className = 'item-content';
@@ -214,13 +239,30 @@
             const el = document.createElement('div');
             el.className = 'bar-chart';
             el.dataset.metricId = metric;
-            el.dataset.lastN = 5;
 
             container.appendChild(el);
 
             if (window.initBarChart) {
                 window.initBarChart(container);
             }
+        }
+
+        function buildDashboardState() {
+            const items = grid.getItems();
+
+            const widgets = items.map(item => {
+                const el = item.getElement();
+                return {
+                    id: el.dataset.widgetId,
+                    chartType: el.dataset.chartType,
+                    metricId: el.dataset.metricId
+                };
+            });
+
+            return {
+                version: 1,
+                widgets: widgets
+            };
         }
 
         setTimeout(function () {

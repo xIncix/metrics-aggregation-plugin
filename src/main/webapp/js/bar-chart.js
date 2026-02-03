@@ -9,8 +9,7 @@
             const metricId = $el.data('metricId');
             const domElement = this;
 
-            // optional: data-last-n="5" im HTML setzen
-            const lastN = Number($el.data('lastN')) || 5;
+            const lastN = 5;
 
             if (!metricId || typeof view === "undefined") {
                 return;

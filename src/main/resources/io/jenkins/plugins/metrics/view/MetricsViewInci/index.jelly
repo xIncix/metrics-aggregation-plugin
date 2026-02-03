@@ -87,42 +87,6 @@
 
       <div class="dashboard-grid">
 
-        <div class="item small">
-          <div class="item-content">
-
-            <button class="delete-widget-btn jenkins-button jenkins-button--icon">
-              <l:icon src="symbol-trash"/>
-            </button>
-
-            <div class="half-doughnut"
-                 data-metric-id="LOC"/>
-          </div>
-        </div>
-
-        <div class="item small">
-          <div class="item-content">
-
-            <button class="delete-widget-btn jenkins-button jenkins-button--icon">
-              <l:icon src="symbol-trash"/>
-            </button>
-
-            <div class="half-doughnut"
-                 data-metric-id="LINE_COVERAGE"/>
-          </div>
-        </div>
-
-        <div class="item small">
-          <div class="item-content">
-
-            <button class="delete-widget-btn jenkins-button jenkins-button--icon">
-              <l:icon src="symbol-trash"/>
-            </button>
-
-            <div class="half-doughnut"
-                 data-metric-id="WARNING_NORMAL"/>
-          </div>
-        </div>
-
       </div>
 
     </l:main-panel>
