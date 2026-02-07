@@ -15,13 +15,23 @@ public class DashboardLayoutService {
               "version": 1,
               "widgets": [
                 {
-                  "id": "2d4e2d9c-6d2c-4f55-8e2a-9c6a2a0b9c11",
+                  "id": "1",
                   "chartType": "half-doughnut",
+                  "metricId": "WARNING_NORMAL"
+                },
+                {
+                  "id": "2",
+                  "chartType": "half-doughnut",
+                  "metricId": "AUTHORS"
+                },
+                {
+                  "id": "3",
+                  "chartType": "bar",
                   "metricId": "LINE_COVERAGE"
                 },
                 {
-                  "id": "a31c8a6d-5b0e-4c3a-8f5d-6d3c2f1a0b7e",
-                  "chartType": "bar",
+                  "id": "4",
+                  "chartType": "tree-map",
                   "metricId": "LOC"
                 }
               ]

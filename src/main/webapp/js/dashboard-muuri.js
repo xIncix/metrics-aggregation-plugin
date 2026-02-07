@@ -108,7 +108,7 @@
             initDropdown(chartDropdown, [
                 {label: 'Half Doughnut', value: 'half-doughnut'},
                 {label: 'Bar Chart', value: 'bar'},
-                {label: 'Line Chart', value: 'line'}
+                {label: 'Tree Map', value: 'tree-map'}
             ]);
 
             let metricLabelAndId = document.getElementById('metric-label-id');
@@ -187,7 +187,7 @@
             const deleteBtn = document.createElement('button');
             deleteBtn.className = 'delete-widget-btn jenkins-button jenkins-button--icon';
 
-            deleteBtn.textContent = 'X'; //TODO Fix this
+            deleteBtn.textContent = 'X';
 
             content.appendChild(deleteBtn);
 
@@ -214,8 +214,9 @@
                     renderBarChart(metric, container);
                     break;
 
-                case 'line':
-                    console.warn('Line chart not implemented yet');
+                case 'tree-map':
+                    itemElem.classList.add('tall')
+                    renderTreeMap(metric, container);
                     break;
 
                 default:
@@ -244,6 +245,18 @@
 
             if (window.initBarChart) {
                 window.initBarChart(container);
+            }
+        }
+
+        function renderTreeMap(metric, container) {
+            const el = document.createElement('div');
+            el.className = 'tree-map';
+            el.dataset.metricId = metric;
+
+            container.appendChild(el);
+
+            if (window.initTreeMap) {
+                window.initTreeMap(container);
             }
         }
 

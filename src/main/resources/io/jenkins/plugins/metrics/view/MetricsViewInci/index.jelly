@@ -11,6 +11,7 @@
 
       <script src="${resURL}/plugin/metrics-aggregation/js/half-doghnut.js"/>
       <script src="${resURL}/plugin/metrics-aggregation/js/bar-chart.js"/>
+      <script src="${resURL}/plugin/metrics-aggregation/js/tree-map.js"/>
       <script src="${resURL}/plugin/metrics-aggregation/js/dashboard-muuri.js"/>
       <link rel="stylesheet"
             href="${resURL}/plugin/metrics-aggregation/css/dashboard-muuri.css"/>
