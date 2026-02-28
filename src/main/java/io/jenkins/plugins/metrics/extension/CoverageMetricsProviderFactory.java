@@ -202,7 +202,7 @@ public class CoverageMetricsProviderFactory extends MetricsProviderFactory {
             .build();
 
     @Override
-    protected MetricsProvider getMetricsProviderFor(final Run<?, ?> build) { //TODO complexity
+    protected MetricsProvider getMetricsProviderFor(final Run<?, ?> build) {
         Map<String, ClassMetricsMeasurementBuilder> builders = new HashMap<>();
         Map<String, Set<String>> seenMetricIds = new HashMap<>();
         var provider = new MetricsProvider();

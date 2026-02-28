@@ -54,7 +54,7 @@ public final class MetricDefinition implements Serializable, Comparable<MetricDe
      * @param originalLabel
      *         the label-id of the origin
      * @param kindOfValue
-     *         defines if its percentage or int
+     *         defines if it is percentage, double or int
      */
     @SuppressWarnings("checkstyle:ParameterNumber") //TODO
     private MetricDefinition(final String id, final String displayName, final String description,
