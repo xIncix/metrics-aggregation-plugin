@@ -1,0 +1,174 @@
+.dashboard-grid {
+    position: relative;
+}
+
+.item {
+    position: absolute;
+    width: 400px;
+    height: 380px;
+    margin: 10px;
+    z-index: 1;
+}
+
+.item.small {
+    position: absolute;
+    width: 260px;
+    height: 240px;
+    margin: 10px;
+    z-index: 1;
+}
+
+.item.tall {
+    position: absolute;
+    width: 650px;
+    height: 500px;
+    margin: 10px;
+    z-index: 1;
+}
+
+.item.muuri-item-dragging { z-index: 3; }
+.item.muuri-item-releasing { z-index: 2; }
+.item.muuri-item-hidden { z-index: 0; }
+
+.item-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    border: 1px solid #6D6B6D;
+    border-radius: 12px;
+    background-color: #fff;
+}
+
+.half-doughnut {
+    width: 250px;
+    height: 240px;
+    margin: 0 auto;
+}
+
+.bar-chart{
+    width: 390px;
+    height: 370px;
+    margin: 0 auto;
+}
+
+.tree-map{
+    width: 640px;
+    height: 490px;
+    margin: 0 auto;
+}
+
+body.dashboard-edit-mode .item-content {
+    border: 2px dashed #6D6B6D;
+    cursor: move;
+}
+
+body.dashboard-edit-mode .item-content:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.delete-widget-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+
+    display: none;
+    z-index: 10;
+}
+
+body.dashboard-edit-mode .delete-widget-btn {
+    display: inline-flex;
+}
+
+.delete-widget-btn:hover {
+    background-color: rgba(220, 38, 38, 0.1);
+}
+
+#dashboard-actions {
+    display: none;
+}
+
+body.dashboard-edit-mode #dashboard-actions {
+    display: flex;
+    align-items: center;
+}
+
+button.jenkins-button#configure-dashboard-btn {
+    background-color: #48728B;
+}
+
+button.jenkins-button#save-dashboard-btn {
+    background-color: #D33834;
+}
+
+button.jenkins-button#add-widget-btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    background-color: #80B0C4;
+}
+
+.jenkins-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.jenkins-dropdown__button {
+    width: 100%;
+    justify-content: space-between;
+    background-color: #f6f8fa;
+    border: 1px solid #d0d7de;
+}
+
+.jenkins-dropdown__menu {
+    list-style: none;
+    margin: 4px 0 0 0;
+    padding: 4px 0;
+
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+
+    width: 100%;
+    z-index: 30;
+
+    background: #ffffff;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.jenkins-dropdown__menu li {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.jenkins-dropdown__menu li:hover {
+    background-color: #eaeef2;
+}
+
+.jenkins-dropdown__button {
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #24292f;
+}
+
+.jenkins-dropdown__label {
+    pointer-events: none;
+}
+
+.jenkins-dropdown.is-open .jenkins-dropdown__menu {
+    display: block;
+}
+
+.chart-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+

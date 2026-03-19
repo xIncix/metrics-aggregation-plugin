@@ -1,0 +1,95 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core"
+         xmlns:l="/lib/layout"
+         xmlns:st="jelly:stapler"
+         xmlns:f="/lib/form">
+
+  <l:layout title="Metrics">
+    <l:main-panel>
+      <st:adjunct includes="io.jenkins.plugins.echarts"/>
+      <st:adjunct includes="io.jenkins.plugins.muuri"/>
+
+      <script src="${resURL}/plugin/metrics-aggregation/js/half-doghnut.js"/>
+      <script src="${resURL}/plugin/metrics-aggregation/js/bar-chart.js"/>
+      <script src="${resURL}/plugin/metrics-aggregation/js/tree-map.js"/>
+      <script src="${resURL}/plugin/metrics-aggregation/js/dashboard-muuri.js"/>
+      <link rel="stylesheet"
+            href="${resURL}/plugin/metrics-aggregation/css/dashboard-muuri.css"/>
+
+      <st:bind var="view" value="${it}"/>
+
+      <l:app-bar title="Metrics" subtitle="Build #${it.owner.number}">
+        <a class="jenkins-button jenkins-button--primary"
+           href="${rootURL}/${it.owner.url}">
+          <l:icon src="symbol-arrow-left"/>
+          Zur Übersicht
+        </a>
+      </l:app-bar>
+
+      <h2>MetricsView</h2>
+
+      <button
+              id="configure-dashboard-btn"
+              class="jenkins-button">
+        <l:icon src="symbol-edit"/>
+        Configure Dashboard
+      </button>
+
+      <div id="metric-label-id"
+           data-metric-label-id="${it.metricDropdownOptionsJSON}">
+      </div>
+
+      <div id="dashboard-actions">
+        <button id="save-dashboard-btn" class="jenkins-button">
+          <l:icon src="symbol-check"/> Save
+        </button>
+
+        <button id="add-widget-btn"
+                class="jenkins-button jenkins-!-margin-left-4">
+          <l:icon src="symbol-add"/> Add Widget
+        </button>
+      </div>
+
+      <div id="add-widget-form"
+           class="jenkins-hidden"
+           data-title="${%Add Widget}">
+
+        <f:form>
+
+          <f:entry title="${%Chart type}">
+            <div class="jenkins-dropdown" data-name="chartType">
+              <button type="button"
+                      class="jenkins-button jenkins-dropdown__button">
+                <span class="jenkins-dropdown__label">
+                  Select chart type
+                </span>
+                <l:icon src="symbol-chevron-down"/>
+              </button>
+              <ul class="jenkins-dropdown__menu"/>
+            </div>
+          </f:entry>
+
+          <f:entry title="${%Metric}">
+            <div class="jenkins-dropdown" data-name="metric">
+              <button type="button"
+                      class="jenkins-button jenkins-dropdown__button">
+                <span class="jenkins-dropdown__label">
+                  Select metric
+                </span>
+                <l:icon src="symbol-chevron-down"/>
+              </button>
+              <ul class="jenkins-dropdown__menu"/>
+            </div>
+          </f:entry>
+
+        </f:form>
+      </div>
+
+
+      <div class="dashboard-grid">
+
+      </div>
+
+    </l:main-panel>
+  </l:layout>
+</j:jelly>
