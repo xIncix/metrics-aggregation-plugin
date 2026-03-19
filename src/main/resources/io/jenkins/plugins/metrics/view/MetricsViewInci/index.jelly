@@ -52,7 +52,7 @@
 
       <div id="add-widget-form"
            class="jenkins-hidden"
-           data-title="${%Add widget}">
+           data-title="${%Add Widget}">
 
         <f:form>
 
